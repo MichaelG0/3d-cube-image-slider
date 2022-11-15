@@ -1,69 +1,56 @@
-let button = document.querySelector('.button')
-let cubes = document.querySelectorAll('.start')
+let playBtn = document.querySelector('#play-btn')
+let cubes = document.querySelectorAll('.cube')
 let bigCube = document.querySelector('.big-cube')
 let arrL = document.querySelector('.arr-wrp-l')
 let arrR = document.querySelector('.arr-wrp-r')
-let n = 1, rot = 1
-    
-    
-function animationCounter(){
-    rot++
-    if (rot % 20 == 0 && n % 2 == 0){
-        for(const cube of cubes){
+let running = true
+
+
+function animationToggler() {
+    if (!running) {
+        for (const cube of cubes) {
             cube.style.animationPlayState = 'paused'
         }
-        rot = 0
+        interval = clearInterval(interval)
     }
-    console.log(rot);
+    console.log('bu');
 }
 
-let interval = setInterval(animationCounter, 200)
+let interval = setInterval(animationToggler, 3999)
 
-button.addEventListener('click', function(){
-    n++
-    if(n % 2 != 0){
-        for(const cube of cubes){
-            if(cube.style.animationPlayState == 'paused'){
-                cube.style.animationPlayState = 'running'
-                rot = 0
-            }
-            button.classList.remove('fa-circle-play')
-            button.classList.add('fa-circle-pause')
+playBtn.addEventListener('click', () => {
+    running = !running;
+    if (running) {
+        playBtn.classList.remove('fa-circle-play')
+        playBtn.classList.add('fa-circle-pause')
+        for (const cube of cubes) {
+            cube.style.animationPlayState = 'running'
         }
-    }else{
-        button.classList.remove('fa-circle-pause')
-        button.classList.add('fa-circle-play')
+        if (!interval){
+            console.log('BUUUUUUU');
+            interval = setInterval(animationToggler, 3999)
+        }
+    } else {
+        playBtn.classList.remove('fa-circle-pause')
+        playBtn.classList.add('fa-circle-play')
     }
 })
 
 
 
 let a = 0
-arrL.addEventListener('click', function(){
+let wait = false
+arrL.addEventListener('click', () => {
+    if (wait) return
+    wait = true
     a++
-    if(a > 3 || a < -3){
-        setTimeout(function() {
-            a = 0
-            bigCube.style.transition = 'transform 0s'
-            angle = bigCube.style.transform = `rotateY(${a * 90}deg)`
-            console.log(a)
-        }, 300)
-    }
-    bigCube.style.transition = 'transform .3s'
-    angle = bigCube.style.transform = `rotateY(${a * 90}deg)`
-    console.log(angle);
+    bigCube.style.transform = `rotateY(${a * 90}deg)`
+    setTimeout(() => wait = false, 400);
 })
-arrR.addEventListener('click', function(){
+arrR.addEventListener('click', () => {
+    if (wait) return
+    wait = true
     a--
-    if(a > 3 || a < -3){
-        setTimeout(function() {
-            a = 0
-            bigCube.style.transition = 'transform 0s'
-            angle = bigCube.style.transform = `rotateY(${a * 90}deg)`
-            console.log(a)
-        }, 300)
-    }
-    bigCube.style.transition = 'transform .3s'
-    angle = bigCube.style.transform = `rotateY(${a * 90}deg)`
-    console.log(angle);
+    bigCube.style.transform = `rotateY(${a * 90}deg)`
+    setTimeout(() => wait = false, 400);
 })
